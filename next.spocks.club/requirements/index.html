@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <title>Spock's Club: Requirement Calculator</title>
+
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Requirement Calculator — Spock's Club" />
+    <meta name="description" content="See the true upgrade costs in STFC! This tool calculates the full cost of buildings or research — including all prerequisites — and applies your cost efficiencies to show your actual resource spend.">
+    <meta name="theme-color" content="#0f2537">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://next.spocks.club/">
+    <meta property="og:site_name" content="Spock's Club">
+    <meta property="og:title" content="Requirement Calculator — Spock's Club">
+    <meta property="og:description" content="See the true upgrade costs in STFC! This tool calculates the full cost of buildings or research — including all prerequisites — and applies your cost efficiencies to show your actual resource spend.">
+    <meta property="og:image" content="https://next.spocks.club/android-chrome-192x192.png">
+
+    <!-- Twitter / X -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:url" content="https://next.spocks.club/" />
+    <meta property="twitter:title" content="Requirement Calculator — Spock's Club">
+    <meta property="twitter:description" content="See the true upgrade costs in STFC! This tool calculates the full cost of buildings or research — including all prerequisites — and applies your cost efficiencies to show your actual resource spend.">
+    <meta property="twitter:image" content="https://next.spocks.club/android-chrome-192x192.png">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <link rel="stylesheet" href="/assets/css/superhero.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/sharp-regular.min.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/sharp-solid.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.45.1/minified.js" integrity="sha512-KG2UswV/2JZm3p2HRWahkWbd5BGql/b8lSfbDWHrhiat6ORvLUChBE0mMqZTNy0Jz6GbEbQPbxT4KDcmh5/sjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js" integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/js/bootstrap.min.js" integrity="sha512-zKeerWHHuP3ar7kX2WKBSENzb+GJytFSBL6HrR2nPSR1kOX1qjm+oHooQtbDpDBSITgyl7QXZApvDfDWvKjkUw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="/js/common.js" defer></script>
+    <link rel="stylesheet" href="/assets/css/third_party/autocomplete.css">
+    <link rel="stylesheet" href="/assets/css/third_party/bstreeview.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lite-youtube-embed/0.3.3/lite-yt-embed.min.css" integrity="sha512-jGFXuWMxJUKzdfBmoyqCXz9k2AU3Z/ZNoayoUPEBAtJZjHbTbw50AxTR1ICVPQJbSamH9ny1JwOur0x4WOdcWQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+    <style>
+        .auto-search {
+            margin: unset !important;
+            max-width: unset !important;
+        }
+
+        .form-floating label {
+            color: unset !important;
+        }
+
+        input.auto-expanded {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        #requirements-startLevel~label::after,
+        #requirements-targetLevel~label::after {
+            background-color: unset !important;
+        }
+
+        div.popover-body input[role="switch"]:checked {
+            background-color: rgba(var(--bs-success-rgb), 1) !important;
+        }
+
+        .upgrade-efficiency-bonus-span:is(.d-none)+div.vr,
+        div.vr:has(+ .upgrade-efficiency-bonus-span:is(.d-none)) {
+            display: none;
+        }
+
+        tr.efficiency-table-divider:is(:first-child),
+        tr.efficiency-table-divider:is(:last-child),
+        tr.efficiency-table-divider:has(+ tr.efficiency-table-divider) {
+            display: none;
+        }
+
+        span.max-efficiency-indicator {
+            display: none;
+        }
+
+        select.upgrade-efficiency-source:has(option:last-of-type:checked)+span.max-efficiency-indicator {
+            display: block;
+        }
+
+        div.input-group:has(option:last-of-type:checked)+span.max-efficiency-indicator {
+            display: block;
+        }
+
+        div.d-inline-flex div.vr:is(:last-child) {
+            display: none;
+        }
+
+        .popover-body {
+            color: white !important;
+        }
+
+        div.card-header a {
+            color: unset;
+            text-decoration: unset;
+        }
+
+        div.card-header .fa-chevron-down {
+            transition: .3s transform ease-in-out;
+        }
+
+        div.card-header .collapsed .fa-chevron-down {
+            transform: rotate(90deg);
+        }
+
+        select.upgrade-efficiency-source,
+        select.repair-efficiency-source {
+            min-width: 120px !important;
+        }
+
+        #upgrade-cost-table td.upgrade-cost-needed.needed-clickable {
+            cursor: pointer;
+            text-decoration: underline dotted;
+            text-underline-offset: 2px;
+        }
+
+        /* Pro tip (keeps banner compact) */
+
+        #upgrade-pro-tip {
+            font-size: .95rem;
+        }
+
+        #ias-refinery-preview,
+        #ias-upgrade-preview {
+            background: #232b38;
+            border: 2.5px solid #338aff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(51, 138, 255, 0.10);
+            padding: 1.5rem 2rem;
+            color: #cfd8e3;
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        #ias-refinery-preview .alert-header,
+        #ias-upgrade-preview .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 0.7em;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5em;
+        }
+
+        #ias-refinery-preview .alert-icon,
+        #ias-upgrade-preview .alert-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.2em;
+            height: 2.2em;
+            border-radius: 50%;
+            background: #ffe066;
+            color: #338aff;
+            font-size: 1.3em;
+            box-shadow: 0 1px 4px rgba(51, 138, 255, 0.10);
+        }
+
+        #ias-refinery-preview .alert-body,
+        #ias-upgrade-preview .alert-body {
+            display: flex;
+            align-items: center;
+            gap: 0.7em;
+            font-size: 1.08rem;
+        }
+
+        #ias-refinery-preview .alert-resource,
+        #ias-upgrade-preview .alert-resource {
+            font-weight: 600;
+            color: #fff;
+            background: #495670;
+            border-radius: 0.7em;
+            padding: 0.18em 0.9em;
+            font-size: 1.05em;
+            box-shadow: 0 1px 4px rgba(51, 138, 255, 0.10);
+        }
+
+        #ias-refinery-preview .alert-target,
+        #ias-upgrade-preview .alert-target {
+            background: #fff;
+            color: #232b38;
+            border-radius: 0.7em;
+            padding: 0.18em 0.9em;
+            font-weight: 700;
+            margin: 0 0.2em;
+            font-size: 1.05em;
+            box-shadow: 0 1px 4px rgba(51, 138, 255, 0.10);
+        }
+
+        #ias-refinery-preview .alert-units,
+        #ias-upgrade-preview .alert-units {
+            color: #b8c2cc;
+            font-size: 1em;
+        }
+
+        #ias-refinery-preview .alert-resource,
+        #ias-upgrade-preview .alert-resource {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #ias-refinery-preview .alert-target,
+        #ias-upgrade-preview .alert-target {
+            background: #6c757d;
+            color: #fff;
+            border-radius: 0.3em;
+            padding: 0.15em 0.6em;
+            font-weight: 600;
+            margin: 0 0.2em;
+            font-size: 1em;
+        }
+
+        #ias-refinery-preview .alert-units,
+        #ias-upgrade-preview .alert-units {
+            color: #b8c2cc;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <div class="modal" tabindex="-1" id="privacy">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Privacy</h5>
+                    <button type="button" class="btn-close myclosemodal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="privacybody">
+                    In order to be able to login Spock's Club will have to store cookies on your device. By clicking “Accept Cookies”, you agree that spocks.club can store cookies on your device.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary myclosemodal" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="myacceptcookies" style="display:block !important" class="btn btn-primary">Accept Cookies</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="loginwindow">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="btn-close myclosemodal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="email">Enter your email to receive a one-time password</label>
+                    <input id="email" class="form-control" type="email" placeholder="Email Address">
+                    <div id="working"></div>
+                    <div id="inviteCodeMsg"></div>
+                    <div id="inviteCode" class="d-none">
+                        <input id="inviteCodeInput" class="form-control" placeholder="Invite Code">
+                    </div>
+                    <div class="privacy"><b>Privacy Note:</b> Spock's Club does not require a login to function. However, if you want the site to save details about your research, ships, and buildings so that you are not required to re-enter them everytime you visit logging
+                        in is required. While Spock's Club requires you to provide your email to authenticate, it is not stored by Spock's Club but is used to create a private unique identifier.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary myclosemodal" data-bs-dismiss="modal">No Thanks</button>
+                    <button type="button" id="getonetimepassword" class="btn btn-primary">Get One-Time Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="onetimewindow">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">One-Time Password</h5>
+                    <button type="button" class="btn-close myclosemodal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Enter enter one-time password
+                    <input id="onetimepass" class="form-control" placeholder="One-Time Password">
+                    <div id="loginstatus"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary myclosemodal" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="useonetimepassword" class="btn btn-primary">Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Alert Modal -->
+    <div class="modal fade" id="inventoryAlertModal" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded bg-primary" style="width:32px;height:32px;">
+                            <span class="text-white fw-bold" style="font-size:0.8rem;">i</span>
+                        </div>
+                        <h5 class="modal-title fw-bold">
+                            Inventory Alert Setup — <span id="ias-resource-name">Parsteel</span>
+                        </h5>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="ias-alert-name" class="form-label">Alert Name (optional)</label>
+                        <input type="text" class="form-control" id="ias-alert-name" maxlength="80" placeholder="e.g., Daily Refine, Armada Loot Pulls, Specialty Ship Upgrade" aria-describedby="ias-alert-name-help" />
+                        <div id="ias-alert-name-help" class="form-text">
+                            Add a short label so you recognize this alert later.
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs" id="ias-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active d-flex align-items-center gap-2" id="tab-refinery" data-bs-toggle="tab" data-bs-target="#pane-refinery" type="button" role="tab" aria-controls="pane-refinery" aria-selected="true">
+                            <span class="border rounded px-1">↻</span>
+                            Maintain Refinery Pulls
+                        </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link d-flex align-items-center gap-2" id="tab-upgrade" data-bs-toggle="tab" data-bs-target="#pane-upgrade" type="button" role="tab" aria-controls="pane-upgrade" aria-selected="false">
+                            <span class="border rounded px-1">↗</span>
+                            Upgrade Threshold
+                        </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content pt-3" id="ias-tabContent">
+                        <div class="tab-pane fade show active" id="pane-refinery" role="tabpanel" aria-labelledby="tab-refinery">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div>
+                                            <h6 class="mb-1">Refinery Pull Configuration</h6>
+                                            <small class="text-muted">Set up alerts to maintain consistent refinery operations</small>
+                                        </div>
+                                        <div class="form-check form-switch m-0">
+                                            <label class="form-check-label me-2" for="ias-advanced-mode">Advanced Mode</label>
+                                            <input class="form-check-input" type="checkbox" id="ias-advanced-mode" aria-describedby="ias-advanced-help" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="ias-simple-mode">
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-6">
+                                                <label for="ias-daily-decay" class="form-label">Daily Resource Usage</label>
+                                                <input type="number" inputmode="numeric" class="form-control" id="ias-daily-decay" placeholder="e.g., 100" />
+                                                <div class="form-text">Estimated units consumed per day</div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label for="ias-sustain-days" class="form-label">Days to Sustain</label>
+                                                <input type="number" inputmode="numeric" class="form-control" id="ias-sustain-days" placeholder="e.g., 7" />
+                                                <div class="form-text">How many days to maintain operations</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="ias-advanced-mode-wrap" class="d-none">
+                                        <div id="ias-advanced-disclaimer" class="alert alert-info small d-flex align-items-start gap-2 mb-3" role="status" style="display:none;">
+                                            <i class="fa-solid fa-circle-info mt-1"></i>
+                                            <div>
+                                                <strong>Planner only.</strong> Bundle rows aren’t saved; we only use them to calculate your daily usage and when to notify you.
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0">Refinery Bundles</h6>
+                                            <button type="button" class="btn btn-soft btn-sm d-flex align-items-center gap-2" id="ias-add-bundle">
+                                            <span class="icon-tile">＋</span>
+                                            Add Bundle
+                                        </button>
+                                        </div>
+                                        <div id="ias-bundles" class="d-grid gap-3">
+                                            <div class="card border-start border-3">
+                                                <div class="card-header py-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="fw-semibold" data-bundle-title>Bundle 1</span>
+                                                            <button type="button" class="btn btn-link p-0 small text-muted" data-action="edit-bundle-name" aria-label="Rename">✎</button>
+                                                        </div>
+                                                        <button type="button" class="btn btn-link text-danger p-0 small" data-action="remove-bundle" aria-label="Remove bundle">🗑</button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-3">
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label">Cost per Pull</label>
+                                                            <input type="number" inputmode="numeric" class="form-control" data-field="cost" placeholder="0" value="0" />
+                                                        </div>
+                                                        <div class="col-12 col-md-6">
+                                                            <label class="form-label">Cooldown (days)</label>
+                                                            <input type="number" inputmode="numeric" class="form-control" data-field="cooldown" placeholder="1" value="1" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="ias-sustain-days-adv" class="form-label">Days to Sustain</label>
+                                            <input type="number" inputmode="numeric" class="form-control" id="ias-sustain-days-adv" placeholder="e.g., 7" />
+                                        </div>
+                                        <template id="ias-bundle-template">
+                                        <div class="card border-start border-3">
+                                            <div class="card-header py-2">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="fw-semibold" data-bundle-title>Bundle</span>
+                                                        <button type="button" class="btn btn-link p-0 small text-muted" data-action="edit-bundle-name" aria-label="Rename">✎</button>
+                                                    </div>
+                                                    <button type="button" class="btn btn-link text-danger p-0 small" data-action="remove-bundle" aria-label="Remove bundle">🗑</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row g-3">
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Cost per Pull</label>
+                                                        <input type="text" inputmode="numeric" class="form-control" data-field="cost" placeholder="0" value="0" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label class="form-label">Cooldown (days)</label>
+                                                        <input type="number" inputmode="numeric" class="form-control" data-field="cooldown" placeholder="1" value="1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    </div>
+                                    <div id="ias-refinery-preview" class="mt-4 p-3 border rounded d-none">
+                                        <div class="alert-header">
+                                            <span class="alert-icon"><i class="fa fa-bell"></i></span> Alert Preview
+                                        </div>
+                                        <div class="alert-body">
+                                            Trigger: <span id="ias-preview-resource" class="alert-resource">—</span> drops below <span class="alert-target" id="ias-preview-total-needed">0</span>
+                                            <span class="alert-units">units</span>
+                                        </div>
+
+                                        <div id="ias-refinery-breakdown" class="mt-3 small text-secondary d-none"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pane-upgrade" role="tabpanel" aria-labelledby="tab-upgrade">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-1">Upgrade Threshold Alert</h6>
+                                    <small class="text-muted">Get notified when you have enough resources for an upgrade</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="ias-target-amount" class="form-label">Reference Amount</label>
+                                        <input type="number" inputmode="numeric" class="form-control" id="ias-target-amount" placeholder="e.g., 8,000" />
+                                        <div class="form-text">
+                                            The total amount you consider “the goal” (e.g., cost of an upgrade).
+                                        </div>
+                                    </div>
+
+                                    <!-- Trigger threshold % (required, default 100, allow >100) -->
+                                    <div class="mb-3">
+                                        <label for="ias-target-percent" class="form-label">
+                                        Trigger Threshold (% of reference)
+                                    </label>
+                                        <div class="input-group">
+                                            <input type="number" inputmode="numeric" min="1" class="form-control" id="ias-target-percent" value="100" placeholder="100" />
+                                            <span class="input-group-text bg-dark" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;">%</span>
+                                        </div>
+                                        <div class="form-text">
+                                            Alert will fire when your balance is at least this percentage of the reference amount. Use values above 100% if you want a “you can stop now” buffer (e.g., 125%).
+                                        </div>
+                                    </div>
+
+                                    <!-- Preview -->
+                                    <div id="ias-upgrade-preview">
+                                        <div class="alert-header">
+                                            <span class="alert-icon"><i class="fa fa-bell"></i></span> Alert Preview
+                                        </div>
+                                        <div class="alert-body">
+                                            Trigger:
+                                            <span class="alert-resource">Parsteel</span>
+                                            <span class="ms-1">at or above</span>
+                                            <span class="alert-target" id="ias-upgrade-preview-threshold">0</span>
+                                            <span class="alert-units">units</span>
+                                            <span class="text-secondary ms-2">(
+                                            <span class="alert-target" id="ias-upgrade-preview-percent">100%</span> of
+                                            <span class="alert-target" id="ias-upgrade-preview-ref">0</span>
+                                            <span class="alert-units">units</span> )
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="ias-create-alert" disabled>Create Alert</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="randstr" type="hidden">
+    <input id="userid" type="hidden" value="4232">
+    <input id="useremail" type="hidden">
+    <div class="modal" tabindex="-1" id="modal-tutorial-requirements">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tutorial: Requirement Calculator</h5>
+                    <button type="button" class="btn-close myclosemodal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <lite-youtube id="yt-tutorial-requirements" videoid="0mmxdDq4L_I" style="background-image: url('https://i.ytimg.com/vi_webp/0mmxdDq4L_I/maxresdefault.webp');" params="enablejsapi=1">
+                        <a href="https://youtube.com/watch?v=0mmxdDq4L_I" class="lty-playbtn" title="Play Video">
+                        <span class="lyt-visually-hidden">Play Video: Requirements Calculator (Spock's Club)</span>
+                    </a>
+                    </lite-youtube>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary myclosemodal" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary lh-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/">
+            <img src="/assets/images/spock.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+            Spock's Club
+        </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" href="/">Home</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownProfile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                            <li class="d-flex justify-content-between">
+                                <a class="dropdown-item" href="/syncing">Syncing</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownCalculators" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Calculators
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCalculators">
+                            <li><a class="dropdown-item" href="/cost">Cost</a></li>
+                            <li><a class="dropdown-item" href="/requirements">Requirements</a></li>
+                            <li><a class="dropdown-item" href="/resources">Resource Allocation</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownCombatTools" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Combat Tools
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownCombatTools">
+                            <li class="d-flex justify-content-between">
+                                <a class="dropdown-item disabled" href="#">
+                                Battle Logs
+                            </a>
+                                <span class="badge bg-warning text-dark align-self-center me-2">Coming Soon</span>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <a class="dropdown-item" href="/apex">
+                                Apex Barrier Calculator
+                            </a>
+                                <span class="badge bg-info-subtle align-self-center me-2">Preview</span>
+                            </li>
+                            <li><a class="dropdown-item" href="/scouts">Scout Finder</a></li>
+                            <li><a class="dropdown-item" href="/armadas">Armada Finder</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownAccountProgress" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Account Progress
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAccountProgress">
+                            <li><a class="dropdown-item" href="/buildings">Buildings</a></li>
+                            <li class="d-flex justify-content-between">
+                                <a class="dropdown-item disabled" href="#">
+                                Buff Overview
+                            </a>
+                                <span class="badge bg-warning text-dark align-self-center me-2">Coming Soon</span>
+                            </li>
+                            <li><a class="dropdown-item" href="/commanders">Command Center</a></li>
+                            <li class="d-flex justify-content-between">
+                                <a id="inventoryLink" class="dropdown-item" href="/inventory">
+                                    Inventory
+                                </a>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <a id="missionsLink" class="dropdown-item" href="/missions">
+                                    Missions
+                                </a>
+                            </li>
+                            <li><a class="dropdown-item" href="/officers">Officers</a></li>
+                            <li><a class="dropdown-item" href="/research">Research</a></li>
+                            <li class="d-flex justify-content-between">
+                                <a class="dropdown-item disabled" href="#">
+                                Ship Hangar
+                            </a>
+                                <span class="badge bg-warning text-dark align-self-center me-2">Coming Soon</span>
+                            </li>
+                            <li><a class="dropdown-item" href="/syndicate">Syndicate</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a id="logout" class="nav-link text-white mylogout" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid mt-3" style="max-width: max-content;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger login-warning d-none">You are not logged in and any changes you make will not be saved</div>
+                <h2>REQUIREMENT CALCULATOR<i class="fa-duotone fa-circle-question ms-1" data-bs-toggle="modal" data-bs-target="#modal-tutorial-requirements"></i></h2>
+
+                <ul class="nav nav-tabs" id="calculator-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-regular" data-bs-toggle="tab" data-bs-target="#pane-regular" type="button" role="tab" aria-controls="pane-regular" aria-selected="true">
+                            <i class="fa-solid fa-magnifying-glass me-2"></i>Regular Calculator
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-comprehensive" data-bs-toggle="tab" data-bs-target="#pane-comprehensive" type="button" role="tab" aria-controls="pane-comprehensive" aria-selected="false">
+                            <i class="fa-solid fa-tree me-2"></i>Comprehensive Operations
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="calculator-tabContent">
+                    <div class="tab-pane fade show active" id="pane-regular" role="tabpanel" aria-labelledby="tab-regular">
+                        <div class="mb-3">
+                            Search for research or buildings and calculate the pre-requisites to reach them. If you sign in any research settings you set will be saved.
+                        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <form class="row row-cols-lg-auto gx-3 align-items-center justify-content-evenly" id="requirements-calc-form" method="dialog">
+                    <div class="col-auto flex-fill">
+                        <div class="form-floating auto-search">
+                            <input type="text" class="form-control pe-4" id="requirements-search" placeholder="Search for buildings or research" required>
+                            <label for="requirements-search">Search for buildings or research</label>
+                        </div>
+                    </div>
+
+                    <div class="w-100 d-md-none"></div>
+
+                    <div class="col-auto flex-fill calculator-step-input invisible">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="requirements-startLevel" placeholder="Start Level" step="1" min="0" max="1" list="entity-levels" required>
+                            <label for="requirements-startLevel">Start Level</label>
+                        </div>
+                    </div>
+
+                    <div class="col-auto flex-fill calculator-step-input invisible">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="requirements-targetLevel" placeholder="Target Level" step="1" min="0" max="1" list="entity-levels" required>
+                            <label for="requirements-targetLevel">Target Level</label>
+                        </div>
+                    </div>
+
+                    <div class="col-auto flex-fill calculator-step-input invisible">
+                        <button id="requirements-calc-submit" type="submit" class="btn btn-primary"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                </form>
+                <datalist id="entity-levels">
+                <option value="0"></option>
+            </datalist>
+            </div>
+        </div>
+        <div class="row mt-2 px-2 d-sm-block d-md-none">
+            <div class="calculator-step-submit d-none">
+                <div class="d-flex justify-content-evenly">
+                    <a href="#upgrade-efficiencies" class="btn btn-primary" tabindex="-1" role="button">Jump to Efficiencies</a>
+                    <a href="#footer" class="btn btn-primary" tabindex="-1" role="button">Jump to Bottom</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mt-3" id="requirements-body">
+                <div class="row">
+                    <div class="col-md-6 calculator-step-submit order-2 order-md-1 d-none" id="requirements-cost-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Upgrade Cost<span class="float-end fw-normal">Settings<i class="fa-duotone fa-gear cost-table-settings-btn ms-2 me-1" data-bs-toggle="popover" data-bs-title="Upgrade Cost Settings" data-bs-content="Loading"></i></span></h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="upgrade-pro-tip" class="alert alert-info d-flex align-items-center justify-content-between py-2 px-3 mb-3 d-none">
+                                    <div class="me-3">
+                                        <i class="fa-solid fa-lightbulb me-2"></i>
+                                        <strong>Pro tip:</strong> Click the <em>Needed</em> amount to quickly create an inventory alert for that resource.
+                                    </div>
+                                    <button type="button" class="btn-close" aria-label="Close" data-dismiss-pro-tip></button>
+                                </div>
+                                <table class="table" id="upgrade-cost-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="pe-0" style="width: 24px;"></th>
+                                            <th>Resource</th>
+                                            <th class="base-cost-col">Base Cost</th>
+                                            <th>Cost</th>
+                                            <th>On Hand</th>
+                                            <th>Needed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider upgrade-cost-table-section-resources">
+                                        <tr class="efficiency-placeholder">
+                                            <td></td>
+                                            <td class="base-cost-col">
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="table-group-divider upgrade-cost-table-section-time">
+                                        <tr class="efficiency-placeholder">
+                                            <td></td>
+                                            <td class="base-cost-col">
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                    <template id="mustache-upgrade-cost">
+                {{#resources}}
+                <tr class="upgrade-cost-row" data-resource="{{id}}">
+                    <td class="pe-0">{{#hasConversionOptions}}<i class="fa-duotone fa-xl fa-caret-right" data-bs-toggle="collapse" data-bs-target="#upgrade-cost-conversion-sub-table-{{id}}" aria-expanded="false" aria-controls="upgrade-cost-conversion-sub-table-{{id}}"></i>{{/hasConversionOptions}}</td>
+                    <td data-resource="{{id}}"><img class="resource-icon object-fit-scale me-1" style="max-height: 24px;" src="/assets/prime/resources/{{art_id}}.png" alt="{{name}}">{{name}}</td>
+                    <td class="format-num upgrade-cost-base base-cost-col" data-format="rounded" data-resource="{{id}}" data-amount="{{cost.base}}">{{cost.base}}</td>
+                    <td class="format-num upgrade-cost-net" data-format="rounded" data-resource="{{id}}" data-amount="{{cost.net}}" data-auction="{{auctionScore}}">{{cost.net}}</td>
+                    <td class="format-num upgrade-cost-on-hand setting-display" data-setting-type="resource" data-setting-id="{{id}}" data-setting-target="raw" data-raw="0" data-tokens="0" data-amount="0" data-format="rounded"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                    <td class="format-num upgrade-cost-needed" data-format="rounded" data-resource="{{id}}" data-amount="{{cost.net}}"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                </tr>
+                {{{renderConversionOptions}}}
+                {{/resources}}
+            </template>
+                                    <template id="mustache-conversion-options">
+                <tr class="collapse conversion-options-toggle" id="upgrade-cost-conversion-sub-table-{{parent.id}}">
+                    <td class="max-colspan" colspan="6">
+                        <!-- {{#hasResourceBatches}} -->
+                        <table class="table table-sm table-secondary table-hover caption-top ms-2 mb-0 w-75 calc-resource-tokens">
+                            <caption><i class="fa-solid fa-cubes me-2"></i>List of Resource Tokens</caption>
+                            <thead><tr><th>Resource Batch</th><th>On Hand</th><th>Value</th></tr></thead>
+                            <tbody class="table-group-divider">
+                                <!-- {{#resourceBatches}} -->
+                                <tr>
+                                    <td data-resource="{{id}}"><img class="resource-icon object-fit-scale me-1" style="max-height: 24px;" src="/assets/prime/resources/{{art_id}}.png" alt="{{name}}">{{name}}</td>
+                                    <td class="format-num setting-display setting-trigger" data-format="rounded" data-setting-type="resource" data-setting-id="{{id}}" data-amount="0" data-converts-to="{{converts_to}}" data-value="{{value}}">0</td>
+                                    <td class="format-num token-value" data-format="rounded" data-amount="0">0</td>
+                                </tr>
+                                <!-- {{/resourceBatches}} -->
+                            </tbody>
+                        </table>
+                        <!-- {{/hasResourceBatches}} -->
+                        <!-- {{#latinumConversion}} -->
+                        <div class="d-inline-flex align-items-start justify-content-evenly column-gap-5 calc-lat-conversion">
+                            <table class="table table-sm table-secondary table-hover caption-top mt-2 ms-2 mb-0" style="min-width: 320px;">
+                                <caption class="text-nowrap"><img class="resource-icon object-fit-scale me-1" style="max-height: 24px;" src="/assets/prime/resources/4.png" alt="Latinum">Latinum Conversion Options</caption>
+                                <thead><tr><th>Threshold</th><th class="text-end">Cost per Unit</th></tr></thead>
+                                <tbody class="table-group-divider">
+                                    <!-- {{#rates}} -->
+                                    <tr class="text-end">
+                                        <td><span class="format-num" data-format="rounded" data-amount="{{threshold}}">{{threshold}}</span><img class="resource-icon object-fit-scale ms-2" style="max-height: 24px;" src="/assets/prime/resources/{{parent.art_id}}.png" alt="{{parent.name}}"></td>
+                                        <td><span class="format-num" data-format="decimal" data-amount="{{multiplier}}">{{multiplier}}</span><img class="resource-icon object-fit-scale ms-2" style="max-height: 24px;" src="/assets/prime/resources/4.png" alt="Latinum"></td>
+                                    </tr>
+                                    <!-- {{/rates}} -->
+                                </tbody>
+                            </table>
+                            <div class="flex-grow-1 align-self-center">
+                                <h6 class="text-nowrap text-muted mb-3">Estimated Conversion Cost<i class="fa-solid fa-circle-info ms-2" data-bs-toggle="popover" data-bs-title="Latinum Conversion" data-bs-content="Please note that this assumes the best possible conversion rate, actual cost may vary depending on how much Latinum can be converted on any given upgrade at once."></i></h6>
+                                <p>
+                                    <strong>Needed:</strong>&nbsp;<span class="latinum-conversion-needed format-num" data-format="rounded" data-amount="0">0</span><br>
+                                    <strong>Conversion Rate:</strong>&nbsp;<span class="latinum-conversion-rate format-num" data-format="decimal" data-amount="0">0</span><br>
+                                    <strong>Latinum Cost:</strong>&nbsp;<span class="latinum-conversion-cost format-num" data-format="rounded" data-amount="0">0</span>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- {{/latinumConversion}} -->
+                        <!-- {{#hasScrappingOptions}} -->
+                        <table class="table table-sm table-secondary table-hover caption-top ms-2 mb-0 w-75 calc-scrapping-options">
+                            <caption class="text-nowrap"><i class="fa-solid fa-recycle me-2"></i>Scrapping Options</caption>
+                            <thead>
+                            <tr>
+                                <th>Ship</th>
+                                <th class="scrapping-mode-max"># Scraps</th>
+                                <th class="scrapping-mode-partial d-none"># Scraps at Max</th>
+                                <th class="scrapping-mode-partial d-none">+ Scrap at Level</th>
+                                <th class="scrapping-mode-max">Rewards per Scrap</th>
+                                <th class="scrapping-mode-partial d-none">Total Rewards</th>
+                                <th class="scrapping-mode-max">Total Rewards</th>
+                            </tr></thead>
+                            <tbody class="table-group-divider">
+                                <!-- {{#scrappingOptions}} -->
+                                <tr>
+                                    <td data-hull-id="{{ship.id}}"><img class="resource-icon object-fit-scale me-1" style="max-height: 24px; max-width: 24px;" src="/assets/prime/ships/{{ship.art_id}}.png" alt="{{ship.name}}">{{ship.name}}</td>
+                                    <td class="scrapping-mode-max">0</td>
+                                    <td class="scrapping-mode-partial d-none">0</td>
+                                    <td class="scrapping-mode-partial d-none">0</td>
+                                    <td class="scrapping-mode-max" data-format="rounded" data-amount="0" data-resource="{{parent.id}}">0</td>
+                                    <td class="scrapping-mode-partial d-none" data-format="rounded" data-amount="0" data-resource="{{parent.id}}" data-levels="{{levels}}">0</td>
+                                    <td class="scrapping-mode-max" data-format="rounded" data-amount="0" data-resource="{{parent.id}}">0</td>
+                                </tr>
+                                <!-- {{/scrappingOptions}} -->
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td class="max-colspan mx-5 py-3" colspan="4">
+                                    <i class="fa-solid fa-circle-info mx-2"></i>
+                                    This table shows how many times a specific ship must be scrapped to collect all the <strong>{{parent.name}}</strong> needed for this upgrade.
+                                    By default, only full scraps at max ship level are shown (rounded up), since scrapping at max level yields the best rewards and is generally recommended.
+                                    To view partial scrap amounts instead, <a class="icon-link scrapping-toggle-mode ms-1" data-mode="max">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-spreadsheet-fill" viewBox="0 0 16 16">
+                                        <path d="M12 0H4a2 2 0 0 0-2 2v4h12V2a2 2 0 0 0-2-2m2 7h-4v2h4zm0 3h-4v2h4zm0 3h-4v3h2a2 2 0 0 0 2-2zm-5 3v-3H6v3zm-4 0v-3H2v1a2 2 0 0 0 2 2zm-3-4h3v-2H2zm0-3h3V7H2zm4 0V7h3v2zm0 1h3v2H6z" />
+                                    </svg>
+                                    click here
+                                </a>.
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                        <!-- {{/hasScrappingOptions}} -->
+                    </td>
+                </tr>
+            </template>
+                                    <template id="mustache-upgrade-time">
+                {{#times}}
+                <tr class="upgrade-time-row" data-time-resource="{{id}}">
+                    <td class="pe-0"><i class="fa-duotone fa-xl fa-caret-right" data-bs-toggle="collapse" data-bs-target="#upgrade-time-sub-table-{{id}}" aria-expanded="false" aria-controls="upgrade-time-sub-table-{{id}}"></i></td>
+                    <td data-time-resource="{{id}}" data-generation="{{generation}}"><i class="fa-solid fa-lg {{icon}} me-1" style="padding: 3.25px;"></i>{{{name}}}</td>
+                    <td class="format-duration upgrade-time-base base-cost-col" data-time-resource="{{id}}" data-seconds="{{time.base}}">{{time.base}} s</td>
+                    <td class="format-duration upgrade-time-net" data-time-resource="{{id}}" data-seconds="{{time.net}}">{{time.net}} s</td>
+                    <td class="format-duration upgrade-time-on-hand" data-time-resource="{{id}}" data-seconds="0"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                    <td class="format-duration upgrade-time-needed" data-time-resource="{{id}}" data-seconds="0"><p class="placeholder-glow"><span class="placeholder col-12"></span></p></td>
+                </tr>
+                <tr class="collapse conversion-options-toggle" id="upgrade-time-sub-table-{{id}}">
+                    <td class="max-colspan" colspan="6">
+                        {{{renderSpeedups}}}
+                    </td>
+                </tr>
+                {{/times}}
+            </template>
+                                    <template id="mustache-time-breakdown">
+                <table class="table table-sm table-secondary table-hover caption-top ms-2 mb-0 w-50 calc-speedups" data-time-resource="{{parent.id}}">
+                    <caption><i class="fa-solid fa-stopwatch me-2"></i>Available Speed-Ups</caption>
+                    <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>On Hand</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    <!-- {{#speedupResources}} -->
+                    <tr>
+                        <td class="lookup-resource" data-resource="{{id}}"></td>
+                        <td class="format-num setting-display setting-trigger" data-format="rounded" data-setting-type="resource" data-setting-id="{{id}}" data-amount="0" data-value="{{reduction_in_seconds}}">0</td>
+                        <td class="format-duration speedup-value" data-seconds="0">0s</td>
+                    </tr>
+                    <!-- {{/speedupResources}} -->
+                    </tbody>
+                    <tfoot class="table-group-divider">
+                    <tr>
+                        <td class="text-center" colspan="2">Total</td>
+                        <td class="format-duration speedup-total-value" data-seconds="0">0s</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </template>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <a class="fa-solid fa-gavel me-2" id="upgrade-auction-popover" style="color: revert !important; text-decoration: revert !important;" role="button" tabindex="0" data-bs-toggle="popover" data-bs-placement="left" data-bs-custom-class="auction-extended" data-bs-trigger="hover focus"
+                                    data-bs-offset="0,25" data-bs-title="Auction Score Breakdown" data-bs-content="Loading&hellip;"></a><strong>Material Spend Points:</strong> <span id="upgrade-auction-value" class="format-num"
+                                    data-amount="0" data-format="rounded">0</span>
+                            </div>
+                        </div>
+
+                        <div class="card mt-2">
+                            <div class="card-header">
+                                <a data-bs-toggle="collapse" data-bs-target="#cumulative-upgrade-efficiencies" aria-expanded="true" aria-controls="cumulative-upgrade-efficiencies">
+                                    <h5>Cumulative Upgrade Efficiency Bonuses<i class="fa-duotone fa-chevron-down float-end mt-1 me-1"></i></h5>
+                                </a>
+                            </div>
+                            <div class="card-body collapse show" id="cumulative-upgrade-efficiencies">
+                                <table class="table" id="cumulative-upgrade-efficiencies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Resource</th>
+                                            <th>Bonus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="upgrade-efficiency-rows" class="table-group-divider">
+                                        <tr class="efficiency-placeholder">
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="d-none">
+                                        <tr>
+                                            <td colspan="2"><i class="fa-duotone fa-circle-info me-2"></i>No cost efficiencies available</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <template id="mustache-efficiency-cumulative">
+        </template>
+                            </div>
+                        </div>
+
+                        <template id="mustache-upgrade-popover-auction">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Resource</th>
+                <th scope="col">Points</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- {{#items}} -->
+            <tr>
+                <td>
+                    <div class="lookup-resource" data-resource="{{resource}}"></div>
+                </td>
+                <td>
+                    <span class="format-num" data-amount="{{value}}" data-format="exact">{{value}}</span> pts
+                </td>
+                <td>
+                    <span class="format-num" data-amount="{{cost}}" data-format="rounded">{{cost}}</span>
+                </td>
+                <td>
+                    <span class="format-num fw-bold text-success" data-amount="{{score}}" data-format="rounded">{{score}}</span> pts
+                </td>
+            </tr>
+            <!-- {{/items}} -->
+            <!-- {{^items}} -->
+            <tr>
+                <td colspan="4" class="text-center text-muted">Spending resources on this upgrade does not score in an event for spending materials.</td>
+            </tr>
+            <!-- {{/items}} -->
+            </tbody>
+        </table>
+    </div>
+</template>
+
+                        <div class="d-none" id="container-settings-popover-cost">
+                            <div id="popover-settings-upgrade-cost">
+                                <div class="form-check form-switch flex-fill">
+                                    <input class="form-check-input setting-input setting-trigger" data-setting-type="preference" data-setting-id="2" data-setting-key="includeResourceTokens" type="checkbox" role="switch" id="option-include-tokens" checked>
+                                    <label class="form-check-label" for="option-include-tokens">Include Resource Tokens</label>
+                                </div>
+                                <div class="form-check form-switch flex-fill">
+                                    <input class="form-check-input setting-input setting-trigger" data-setting-type="preference" data-setting-id="2" data-setting-key="showBaseCost" type="checkbox" role="switch" id="option-show-base" checked>
+                                    <label class="form-check-label" for="option-show-base">Show Base Cost</label>
+                                </div>
+                                <!--
+        <div class="form-check form-switch flex-fill">
+            <input class="form-check-input" type="checkbox" role="switch" id="option-show-latinum">
+            <label class="form-check-label" for="option-show-latinum">Show Latinum Conversion</label>
+        </div>
+        -->
+                                <div class="form-check form-switch flex-fill">
+                                    <input class="form-check-input setting-input setting-trigger" data-setting-type="preference" data-setting-id="2" data-setting-key="showExactValues" type="checkbox" role="switch" id="option-format-exact">
+                                    <label class="form-check-label" for="option-format-exact">Show Exact Values</label>
+                                </div>
+
+                                <!--
+        <div class="input-group my-3 flex-fill">
+            <span class="input-group-text">Alliance Helps</span>
+            <input type="number" class="form-control" id="option-alliance-helps" min="5" max="21" aria-label="Alliance Helps" value="20">
+            <div id="option-alliance-helps-feedback" class="invalid-feedback text-danger-emphasis ms-2">
+                Enter a number between 5 and 21.
+            </div>
+        </div>
+        -->
+                            </div>
+                        </div>
+
+                        <div class="d-none" id="container-settings-popover-bonuses">
+                            <div id="popover-settings-cumulative-bonuses">
+                                <p class="text-break flex-fill">
+                                    Manually adjust Cost Efficiency Bonuses by entering an offset. Note that changes will not be saved upon leaving this page.
+                                </p>
+                                <p class="text-danger">
+                                    This feature has been temporarily disabled and will return soon.
+                                </p>
+                                <div class="mt-3 flex-fill">
+                                    <input type="checkbox" class="btn-check" id="btn-toggle-edit-ce" autocomplete="off" disabled>
+                                    <label class="btn btn-outline-success btn-sm button-toggle-edit" for="btn-toggle-edit-ce">Toggle Edit Mode</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-2">
+                            <div class="card-header">
+                                <a data-bs-toggle="collapse" data-bs-target="#upgrade-efficiencies" aria-expanded="true" aria-controls="upgrade-efficiencies">
+                                    <h5>Upgrade Efficiency Bonuses<i class="fa-duotone fa-chevron-down float-end mt-1 me-1"></i></h5>
+                                </a>
+                            </div>
+                            <div class="card-body collapse show" id="upgrade-efficiencies">
+                                <table class="table align-middle sc-hide-if-empty" id="research-upgrade-efficiencies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Research</th>
+                                            <th>Tree</th>
+                                            <th class="d-none d-sm-table-cell">Column</th>
+                                            <th class="d-none d-sm-table-cell">Row</th>
+                                            <th>Level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr class="efficiency-placeholder">
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <template id="mustache-efficiency-research">
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModStarbaseModuleConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModResearchCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModShipConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModComponentCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModComponentCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModForbiddenTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModForbiddenTechLevelUpCost}}
+            {{#ModForbiddenTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModForbiddenTechTierUpCost}}
+            {{#ModChaosTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModChaosTechLevelUpCost}}
+            {{#ModChaosTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModChaosTechTierUpCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModRepairCosts}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModRepairCosts}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModStarbaseModuleConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModResearchSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModShipConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModTierUpSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModTierUpSpeed}}
+            {{/divider}}
+
+            {{#ModRepairTime}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{source_data.tree.name}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.column}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.row}}</td>
+                <td>
+                    <div class="position-relative">
+                        {{{levelOptions}}}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success max-efficiency-indicator z-1">max</span>
+                    </div>
+                </td>
+            </tr>
+            {{/ModRepairTime}}
+        </template>
+
+                                <div class="container p-0">
+                                    <div class="row row-cols-1 row-cols-md-2">
+                                        <div class="col">
+                                            <table class="table align-middle sc-hide-if-empty" id="building-upgrade-efficiencies-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Building</th>
+                                                        <th>Level</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                    <tr class="efficiency-placeholder">
+                                                        <td>
+                                                            <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <template id="mustache-efficiency-building">
+                        {{#divider}}
+                        {{#ModStarbaseModuleConstructionCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModStarbaseModuleConstructionCost}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModResearchCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModResearchCost}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModShipConstructionCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModShipConstructionCost}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModComponentCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModComponentCost}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModForbiddenTechLevelUpCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModForbiddenTechLevelUpCost}}
+                        {{#ModForbiddenTechTierUpCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModForbiddenTechTierUpCost}}
+                        {{#ModChaosTechLevelUpCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModChaosTechLevelUpCost}}
+                        {{#ModChaosTechTierUpCost}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModChaosTechTierUpCost}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModRepairCosts}}
+                        <tr>
+                            <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModRepairCosts}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModStarbaseModuleConstructionSpeed}}
+                        <tr>
+                            <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModStarbaseModuleConstructionSpeed}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModResearchSpeed}}
+                        <tr>
+                            <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModResearchSpeed}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModShipConstructionSpeed}}
+                        <tr>
+                            <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModShipConstructionSpeed}}
+                        {{/divider}}
+
+                        {{#divider}}
+                        {{#ModTierUpSpeed}}
+                        <tr>
+                            <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModTierUpSpeed}}
+                        {{/divider}}
+
+                        {{#ModRepairTime}}
+                        <tr>
+                            <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                            <td>{{{levelOptions}}}</td>
+                        </tr>
+                        {{/ModRepairTime}}
+                    </template>
+                                        </div>
+
+                                        <div class="col">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th><label for="operations-range">Operations Level <span id="operations-range-value" class="update-target">1</span></label></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="range" class="form-range setting-input setting-trigger range-update-label" min="1" max="70" id="operations-range" data-setting-type="building" data-setting-id="0" value="1">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th><label for="syndicate-range">Syndicate Level <span id="syndicate-range-value" class="update-target">0</span></label></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="range" class="form-range setting-input setting-trigger range-update-label" min="0" max="65" id="syndicate-range" data-setting-type="resource" data-setting-id="1141922149" value="0">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th><label for="alliance-syndicate-range">Emerald Chain Level <span id="alliance-syndicate-range-value" class="update-target">0</span></label></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="range" class="form-range setting-input setting-trigger range-update-label" min="0" max="30" id="alliance-syndicate-range" data-setting-type="preference" data-setting-id="0" value="0">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table class="table align-middle sc-hide-if-empty" id="exocomp-upgrade-efficiencies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Exocomp</th>
+                                            <th>Category</th>
+                                            <th class="d-none d-sm-table-cell">Grade</th>
+                                            <th class="d-none d-sm-table-cell">Rarity</th>
+                                            <th>Values</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr class="efficiency-placeholder">
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td class="d-none d-sm-table-cell">
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <template id="mustache-efficiency-exocomp">
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModStarbaseModuleConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModResearchCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModShipConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModComponentCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModComponentCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModForbiddenTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModForbiddenTechLevelUpCost}}
+            {{#ModForbiddenTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModForbiddenTechTierUpCost}}
+            {{#ModChaosTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModChaosTechLevelUpCost}}
+            {{#ModChaosTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModChaosTechTierUpCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell" >{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModStarbaseModuleConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModResearchSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModShipConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModTierUpSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModTierUpSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModRepairCosts}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModRepairCosts}}
+            {{/divider}}
+
+            {{#ModRepairTime}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td class="d-none d-sm-table-cell">{{source_data.grade}}★</td>
+                <td class="d-none d-sm-table-cell">{{rarity}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModRepairTime}}
+        </template>
+
+                                <table class="table align-middle sc-hide-if-empty" id="consumable-upgrade-efficiencies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Consumable</th>
+                                            <th>Source</th>
+                                            <th>Values</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr class="efficiency-placeholder">
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <template id="mustache-efficiency-consumable">
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModStarbaseModuleConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModResearchCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModShipConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModComponentCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModComponentCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModForbiddenTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModForbiddenTechLevelUpCost}}
+            {{#ModForbiddenTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModForbiddenTechTierUpCost}}
+            {{#ModChaosTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModChaosTechLevelUpCost}}
+            {{#ModChaosTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModChaosTechTierUpCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModStarbaseModuleConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModResearchSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModShipConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModTierUpSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModTierUpSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModRepairCosts}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModRepairCosts}}
+            {{/divider}}
+
+            {{#ModRepairTime}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{consumableCategory}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModRepairTime}}
+        </template>
+
+                                <table class="table align-middle sc-hide-if-empty" id="misc-upgrade-efficiencies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        <tr class="efficiency-placeholder">
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                            <td>
+                                                <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <template id="mustache-efficiency-misc">
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModStarbaseModuleConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModResearchCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModShipConstructionCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModComponentCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModComponentCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModForbiddenTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModForbiddenTechLevelUpCost}}
+            {{#ModForbiddenTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModForbiddenTechTierUpCost}}
+            {{#ModChaosTechLevelUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModChaosTechLevelUpCost}}
+            {{#ModChaosTechTierUpCost}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModChaosTechTierUpCost}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModStarbaseModuleConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModStarbaseModuleConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModResearchSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModResearchSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModShipConstructionSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModShipConstructionSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModTierUpSpeed}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModTierUpSpeed}}
+            {{/divider}}
+
+            {{#divider}}
+            {{#ModRepairCosts}}
+            <tr>
+                <td>{{source_data.name}}<br><div class="d-inline-flex flex-wrap align-items-center" style="max-width: 240px;">{{{efficiencyIcon}}}<div class="vr me-1"></div>{{{resourceRestrictions}}}</div></td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModRepairCosts}}
+            {{/divider}}
+
+            {{#ModRepairTime}}
+            <tr>
+                <td>{{source_data.name}}<br>{{{efficiencyIcon}}}</td>
+                <td>{{{source_data.description}}}</td>
+                <td>{{{levelOptions}}}</td>
+            </tr>
+            {{/ModRepairTime}}
+        </template>
+                            </div>
+                        </div>
+
+                        <template id="mustache-efficiency-building-cost-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Building Cost Efficiency">
+      <i class="fa-solid fa-building fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-circle-dollar fa-stack-1x text-success z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-building-time-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Building Construction Speed">
+      <i class="fa-solid fa-building fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-clock fa-stack-1x text-primary z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-research-cost-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Research Cost Efficiency">
+      <i class="fa-solid fa-flask fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-circle-dollar fa-stack-1x text-success z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-research-time-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Research Speed">
+      <i class="fa-solid fa-flask fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-clock fa-stack-1x text-primary z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-ft-cost-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Forbidden/Chaos Tech Cost Efficiency">
+      <i class="fa-solid fa-space-station-moon-construction fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-circle-dollar fa-stack-1x text-success z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-ship-cost-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Ship Construction Cost Efficiency">
+      <i class="fa-solid fa-starship fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-hammer fa-stack-1x text-success z-1" style="transform: scale(0.66) translate(.7rem, .75rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-repair-cost-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Repair Cost Efficiency">
+      <i class="fa-solid fa-wrench fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-circle-dollar fa-stack-1x text-success z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-repair-time-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Repair Speed">
+      <i class="fa-solid fa-wrench fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-clock fa-stack-1x text-primary z-1" style="transform: scale(0.66) translate(.7rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-component-cost-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Ship Component Cost Efficiency">
+      <i class="fa-solid fa-starship fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-circle-dollar fa-stack-1x text-success z-1" style="transform: scale(0.66) translate(.7rem, .75rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-ship-time-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Ship Construction Time">
+      <i class="fa-solid fa-starship fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-hammer fa-stack-1x text-primary z-1" style="transform: scale(0.66) translate(.7rem, .75rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-tier-up-time-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Ship Tier-Up Time">
+      <i class="fa-solid fa-starship fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-turn-up fa-stack-1x text-primary z-1" style="transform: scale(0.66) translate(.85rem, .5rem);"></i>
+    </span>
+</template>
+
+                        <template id="mustache-efficiency-unknown-icon">
+    <span class="fa-stack" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Unknown">
+      <i class="fa-solid fa-question-circle fa-stack-1x z-0"></i>
+      <i class="fa-solid fa-skull-crossbones fa-stack-1x text-primary z-1" style="transform: scale(0.66) translate(.7rem, .75rem);"></i>
+    </span>
+</template>
+                    </div>
+                    <div class="col-md-6 calculator-step-submit order-1 order-md-2 mb-2 d-none" id="requirements-tree-col">
+                        <div class="d-flex d-sm-none mt-2"></div>
+                        <div class="row row-cols-4 g-3">
+                            <div class="col">
+                                <button id="requirements-expand-all" class="btn btn-primary w-100"><i class="fa-regular fa-plus-square me-2"></i>Expand All</button>
+                            </div>
+                            <div class="col">
+                                <button id="requirements-collapse-all" class="btn btn-primary w-100"><i class="fa-regular fa-minus-square me-2"></i>Collapse All</button>
+                            </div>
+                            <div class="col">
+                                <button id="requirements-check-all" class="btn btn-primary w-100"><i class="fa-regular fa-check-square me-2"></i>Check All</button>
+                            </div>
+                            <div class="col">
+                                <button id="requirements-uncheck-all" class="btn btn-primary w-100"><i class="fa-regular fa-square me-2"></i>Uncheck All</button>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="requirements-tree-filter-icon"><i class="fa-solid fa-search fa-lg"></i></span>
+                                    <input type="text" class="form-control z-0" id="requirements-tree-filter" aria-label="Filter requirements" aria-describedby="requirements-tree-filter-icon" placeholder="Filter&hellip;">
+                                    <button id="requirements-clear-search" class="invisible auto-clear z-1" type="button" aria-label="Clear text from input"></button>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button id="requirements-hide-done" class="btn btn-primary w-100"><i class="fa-regular fa-eye-slash me-2"></i>Hide Done</button>
+                            </div>
+                            <div class="col">
+                                <button id="requirements-reset-tree" class="btn btn-primary w-100"><i class="fa-regular fa-rotate me-2"></i>Reset Tree</button>
+                            </div>
+                        </div>
+                        <div class="row mt-3 px-2">
+                            <div id="requirements-tree" class="text-nowrap overflow-x-auto w-100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comprehensive Operations Calculator Tab -->
+        <div class="tab-pane fade" id="pane-comprehensive" role="tabpanel" aria-labelledby="tab-comprehensive">
+            <div class="mb-3">
+                Calculate all buildings and research prerequisites up to a target Operations level. This shows everything you can and should upgrade before progressing to the next Operations level, excluding items you've already completed.
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <form class="row row-cols-lg-auto gx-3 align-items-center justify-content-evenly" id="comprehensive-ops-form">
+                        <div class="col-auto flex-fill">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" id="comprehensive-ops-targetLevel" placeholder="Target Operations Level" step="1" min="1" max="70" value="1" required>
+                                <label for="comprehensive-ops-targetLevel">Target Operations Level</label>
+                            </div>
+                        </div>
+
+                        <div class="col-auto flex-fill">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="comprehensive-show-completed" checked>
+                                <label class="form-check-label" for="comprehensive-show-completed">
+                                    Show completed items
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-auto flex-fill">
+                            <button id="comprehensive-ops-submit" type="submit" class="btn btn-primary"><i class="fa-solid fa-tree"></i> Calculate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-2 px-2 d-sm-block d-md-none">
+                <div class="calculator-step-submit d-none">
+                    <div class="d-flex justify-content-evenly">
+                        <a href="#upgrade-efficiencies" class="btn btn-primary" tabindex="-1" role="button">Jump to Efficiencies</a>
+                        <a href="#footer" class="btn btn-primary" tabindex="-1" role="button">Jump to Bottom</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mt-3" id="comprehensive-ops-body">
+                    <div class="row">
+                        <div class="col-md-6 calculator-step-submit order-2 order-md-1 d-none" id="comprehensive-ops-cost-col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Total Cost to Reach Operations Level <span id="comprehensive-ops-level-display">1</span><span class="float-end fw-normal">Settings<i class="fa-duotone fa-gear cost-table-settings-btn ms-2 me-1" data-bs-toggle="popover" data-bs-title="Cost Settings" data-bs-content="Loading"></i></span></h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="comprehensive-ops-pro-tip" class="alert alert-info d-flex align-items-center justify-content-between py-2 px-3 mb-3 d-none">
+                                        <div class="me-3">
+                                            <i class="fa-solid fa-lightbulb me-2"></i>
+                                            <strong>Pro tip:</strong> This shows all prerequisites for Operations level <span id="comprehensive-ops-pro-tip-level">1</span>. Items marked with ✓ are already completed.
+                                        </div>
+                                        <button type="button" class="btn-close" aria-label="Close" data-dismiss-comprehensive-tip></button>
+                                    </div>
+                                    <table class="table" id="comprehensive-upgrade-cost-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="pe-0" style="width: 24px;"></th>
+                                                <th>Resource</th>
+                                                <th class="base-cost-col">Base Cost</th>
+                                                <th>Cost</th>
+                                                <th>On Hand</th>
+                                                <th>Needed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider upgrade-cost-table-section-resources">
+                                            <tr class="efficiency-placeholder">
+                                                <td></td>
+                                                <td class="base-cost-col">
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                                <td>
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                                <td>
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                                <td>
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                                <td>
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot class="table-group-divider upgrade-cost-table-section-time">
+                                            <tr class="efficiency-placeholder">
+                                                <td></td>
+                                                <td class="base-cost-col">
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                                <td>
+                                                    <p class="placeholder-glow"><span class="placeholder col-12"></span></p>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 calculator-step-submit order-1 order-md-2 mb-2 d-none" id="comprehensive-ops-tree-col">
+                            <div class="d-flex d-sm-none mt-2"></div>
+                            <div class="row row-cols-2 g-3 mb-3">
+                                <div class="col">
+                                    <button id="comprehensive-expand-all" class="btn btn-primary w-100"><i class="fa-regular fa-plus-square me-2"></i>Expand All</button>
+                                </div>
+                                <div class="col">
+                                    <button id="comprehensive-collapse-all" class="btn btn-primary w-100"><i class="fa-regular fa-minus-square me-2"></i>Collapse All</button>
+                                </div>
+                            </div>
+                            <div class="row mt-3 px-2">
+                                <div id="comprehensive-ops-tree" class="text-nowrap overflow-x-auto w-100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="individual-modal-holder"></div>
+
+                    <template id="mustache-individual-breakdown">
+                    <div class="modal modal-lg" tabindex="-1" id="breakdown-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Level {{ level }}, {{ name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table" id="individual-upgrade-cost-table">
+                                        <thead><tr><th>Resource</th><th>Base Cost</th><th>Cost</th><th>On Hand</th><th>Needed</th></tr></thead>
+                                        <tbody class="table-group-divider">
+                                            <!-- {{#resources}} -->
+                                            <tr class="upgrade-cost-row" data-resource="{{id}}">
+                                                <td class="lookup-resource" data-resource="{{id}}"></td>
+                                                <td class="format-num upgrade-cost-base" data-resource="{{id}}" data-amount="{{cost.base}}">{{cost.base}}</td>
+                                                <td class="format-num upgrade-cost-net check-conversion-options" data-resource="{{id}}" data-amount="{{cost.net}}" data-auction="{{auctionScore}}">{{cost.net}}</span></p></td>
+                                                <td class="format-num upgrade-cost-on-hand setting-display" data-setting-type="resource" data-setting-id="{{id}}" data-amount="{{on_hand}}">{{on_hand}}</p></td>
+                                                <td class="format-num upgrade-cost-needed check-conversion-options" data-resource="{{id}}" data-amount="{{needed}}">{{needed}}</td>
+                                            </tr>
+                                            <!-- {{/resources}} -->
+                                        </tbody>
+                                        <tfoot class="table-group-divider">
+                                            <!-- {{#times}} -->
+                                            <tr class="upgrade-time-row" data-time-resource="{{id}}">
+                                                <td class="lookup-resource" data-resource="{{id}}"></td>
+                                                <td class="format-duration upgrade-time-base" data-time-resource="{{id}}" data-seconds="{{seconds.base}}">{{seconds.base}}</td>
+                                                <td class="format-duration upgrade-time-net check-conversion-options" data-time-resource="{{id}}" data-seconds="{{seconds.net}}">{{seconds.net}}</span></p></td>
+                                                <td colspan="2"></td>
+                                            </tr>
+                                            <!-- {{/times}} -->
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="modal-footer justify-content-start">
+                                    <div class="card bg-dark w-100 d-flex flex-row align-items-center justify-content-center p-3">
+                                        <i class="fa-solid fa-gavel me-2"></i>
+                                        <strong class="me-2">Material Spend Points:</strong>
+                                        <span class="font-monospace format-num" data-amount="{{auctionScore}}">{{auctionScore}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                </div>
+            </div>
+        </div>
+        <div id="alerts-toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    </div>
+    <footer class="mt-auto mx-auto align-content-center" id="footer">
+        <a class="px-2" href="https://discord.gg/qQ6ApCZrDq"><img src="/assets/images/discord.png" style="height:100px;" alt="Discord"></a>
+        <a class="px-2" href="https://www.patreon.com/SpocksClub"><img src="/assets/images/patreon.png" style="height:100px;" alt="Patreon"></a>
+        <a class="px-2" href="http://paypal.me/glaremasters"><img src="/assets/images/paypal.png" style="height:55px;" alt="PayPal"></a>
+    </footer>
+
+    <button id="scrollToTopBtn" onclick="scrollToTop()" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; border: none; outline: none; background-color: #555; color: white; cursor: pointer; padding: 15px; border-radius: 10px; font-size: 18px;">
+    <i class="fas fa-arrow-up"></i>
+</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.10.8/autoNumeric.min.js" integrity="sha512-mD/vCchTqwSnIslMzOI7zbNeTNDqosvT7VvrNHo5xJDvg5hCpCvvct0QtHtrHouaWsI3ofL4B7nNaF8pDfg3Yw==" crossorigin="anonymous" referrerpolicy="no-referrer"
+        defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lite-youtube-embed/0.3.3/lite-yt-embed.min.js" integrity="sha512-l8cIzs5aAJutiOPIyW/9PAvDevwTA8F17Pmge51rwmKBkjZ47tap3kRv+pI8JX9owkkBpRMuOIUE7v+Rg6os9w==" crossorigin="anonymous" referrerpolicy="no-referrer"
+        async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tree-model/1.0.7/TreeModel-min.js" integrity="sha512-bljfMM3WKjO+CSVRpLRW0qAJ8QgBbrKJa5BiH3l9Kemnl5pfKKnHA+QOJSY4Pt/iTYNU/uMGiWLbN3tQUtS7XQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+    <script src="/js/third_party/autocomplete.js" defer></script>
+    <script src="/js/third_party/bstreeview.js" defer></script>
+    <script type="module" src="/js/requirements.js" defer></script>
+    <script type="module" src="/js/comprehensive-requirements.js" defer></script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"75be0588a9744c8f944508cfb1873e98","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

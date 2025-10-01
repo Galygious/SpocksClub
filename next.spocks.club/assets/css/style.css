@@ -1,0 +1,903 @@
+:root {
+    --epic: #774eb1;
+    --rare: #155779;
+    --uncommon: #0f4e2f;
+    --common: #1c2122;
+}
+
+/*@use postcss-nested;*/
+
+.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.changecommander {
+    cursor: pointer;
+}
+
+.mycard {
+    margin-top: 10px;
+}
+
+.copygamelink {
+    margin-bottom: 10px;
+}
+
+.fleetcommander {
+    min-height: 100px;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    background-position: center !important;
+}
+
+.changecommander {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    max-width: 200px;
+}
+
+.menuclick {
+    text-align: left !important;
+}
+
+.mylogin {
+    text-align: left !important;
+}
+
+.mylogout {
+    text-align: left !important;
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #4c9be8 !important;
+}
+
+.mytransporter {
+    font-size: 28px;
+}
+
+.fa-transporter-empty {
+    margin-left: 5px !important;
+    padding-right: 5.5px !important;
+}
+
+.detailbutton {
+    margin-top: -5px;
+}
+
+.fptd {
+    text-align: center;
+}
+
+.noshot {
+    width: 75px;
+    color: white;
+    font-size: 10px;
+    background-color: #dc3545 !important;
+}
+
+.shotamount {
+    font-size: 10px;
+}
+
+.shot {
+    width: 95px;
+    font-size: 12px;
+    white-space: nowrap;
+    background-color: #198754 !important;
+    color: white;
+}
+
+#fpdets {
+    font-size: 12px;
+}
+
+/*.buttons-copy {
+   margin-top:2px;
+}
+.dataTables_length {
+    padding-top:10px;
+}*/
+
+.hullbar {
+    border-radius: 5px;
+}
+
+.healthbar {
+    border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+}
+
+.damagebar {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
+.modal-content {
+    border-radius: 10px;
+}
+
+.modalbuffcontainer {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.damagetd {
+    white-space: nowrap;
+    font-size: 12px !important;
+}
+
+.menubuttons {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.researchtree {
+    display: none;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.list-group-item:hover {
+    color: black !important;
+}
+
+#tree {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+#tree ul li {
+    width: 200%;
+}
+
+select {
+    border-radius: 5px !important;
+}
+
+.btn {
+    border-radius: 5px !important;
+}
+
+input {
+    border-radius: 5px !important;
+}
+
+.card {
+    border-radius: 5px !important;
+}
+
+#tree ul {
+    white-space: nowrap;
+    width: 200%;
+}
+
+.treeview {
+    border: solid 1px #ddf7f5;
+    padding: 2px;
+    border-radius: 10px;
+}
+
+.treeview ul {
+    border-radius: 5px;
+}
+
+.researchtd {
+    width: 200px !important;
+    height: 120px !important;
+}
+
+.researchtdheader {
+    width: 200px !important;
+    text-align: center;
+    font-size: 1.1em;
+    padding: 8px;
+}
+
+.artifactbackground {
+    z-index: 0;
+    opacity: 0.9;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    align-self: center;
+    max-width: 200px;
+    max-height: 120px;
+}
+
+.artifactsbackground {
+    z-index: 0;
+    opacity: 0.9;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    align-self: center;
+    max-width: 200px;
+    max-height: 120px;
+}
+
+.buffsbackground {
+    z-index: 0;
+    opacity: 0.9;
+    margin-top: 45px;
+    margin-bottom: 45px;
+    align-self: center;
+    max-width: 200px;
+    max-height: 90px;
+}
+
+.favorsbackground {
+    z-index: 0;
+    opacity: 0.9;
+    margin-top: 45px;
+    margin-bottom: 45px;
+    align-self: center;
+    max-width: 200px;
+    max-height: 90px;
+}
+
+.researchbackground {
+    z-index: 0;
+    opacity: 0.3;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 120px;
+}
+
+.researchcontent {
+    z-index: 100;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: white 1px 1px 3px !important;
+    color: black !important;
+}
+
+.resource {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    float: left;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.form-floating {
+    border-radius: 5px;
+}
+
+.officercard {
+    box-sizing: border-box;
+    /* Ensures padding is included in width */
+    margin-bottom: 15px;
+    /* Add spacing between rows */
+}
+
+.officercardmobile {
+    padding: 5px;
+    border: solid 1px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+match {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: var(--bs-primary);
+}
+
+.ability {
+    color: var(--bs-primary);
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.officercarddetail {
+    float: left;
+    width: 50%;
+    border: solid 1px;
+    border-radius: 5px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.abilityname {
+    font-weight: bold;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+}
+
+.abilityvalue {
+    display: inline-block;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--bs-primary);
+}
+
+.abilityimage {
+    display: inline-block;
+}
+
+.abilitythumb {
+    width: 35px;
+    margin-right: 5px;
+}
+
+.card-border {
+    border: solid 1px;
+}
+
+.traitcard {
+    margin-bottom: 5px;
+    border: solid 1px var(--bs-dark);
+}
+
+.slider.slider-horizontal {
+    width: 100% !important;
+}
+
+.traitdets {
+    font-weight: lighter;
+}
+
+.slider-selection {
+    background: var(--bs-primary) !important;
+}
+
+.officercarddetails {
+    font-size: 11px;
+}
+
+.mycard-body {
+    border-top: solid 3px black !important;
+    padding: 4px !important;
+}
+
+.clickme {
+    cursor: pointer;
+}
+
+.card-img-top {
+    height: 130px;
+    width: 100%;
+    object-position: 50% 50%;
+    object-fit: contain;
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    justify-content: space-between;
+}
+
+.officerEpic {
+    border-color: var(--epic);
+    background-color: var(--epic);
+}
+
+.officerRare {
+    border-color: var(--rare);
+    background-color: var(--rare);
+}
+
+.officerUncommon {
+    border-color: var(--uncommon);
+    background-color: var(--uncommon);
+}
+
+.officerCommon {
+    border-color: var(--common);
+    background-color: var(--common);
+}
+
+.officerimage {
+    width: 100px;
+}
+
+.officermax {
+    color: lightgreen;
+    display: flex;
+    align-items: center;
+    padding: 25px;
+    margin: 5px;
+    font-size: 20px;
+}
+
+.help {
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.resourcethumb {
+    width: 25px;
+}
+
+.buffthumb {
+    width: 25px;
+}
+
+.officerthumb {
+    width: 40px;
+}
+
+.officername {
+    color: #fff;
+}
+
+.officernamesize {
+    font-size: 1.3em;
+}
+
+.officershow {
+    border-radius: 5px;
+    background-color: var(--bs-secondary);
+    padding: 10px;
+    color: #ddd !important;
+}
+
+.vspace {
+    height: 10px;
+}
+
+.officerthumbleft {
+    width: 50px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.tddets {
+    font-size: 0.8em;
+    font-style: italic;
+}
+
+.resourcect {
+    width: 25px;
+    display: inline-block;
+}
+
+.officerthumbleftct {
+    width: 35px;
+    display: inline-block;
+}
+
+.officerthumbleftctcap {
+    width: 55px;
+    display: inline-block;
+}
+
+.officerthumbleftctship {
+    width: 70px;
+    display: inline-block;
+}
+
+.bl-good {
+    background: #103019 !important;
+}
+
+.bl-bad {
+    background: #520b11 !important;
+}
+
+.ft-good {
+    color: #103019 !important;
+    font-weight: bolder !important;
+}
+
+.ft-bad {
+    font-weight: bolder !important;
+    color: #520b11 !important;
+}
+
+.perdiff {
+    font-style: italic;
+    font-weight: lighter;
+    font-size: 0.8em;
+}
+
+.officertd {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.officerthumb2 {
+    width: 70px;
+}
+
+.officerdetails {
+    font-size: 12px;
+    line-height: 8px;
+}
+
+ul.form-control {
+    border-radius: 5px;
+}
+
+.researchwrap {
+    color: white !important;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cardwidth {
+    width: 200px !important;
+}
+
+.titleicon {
+    height: 50px;
+}
+
+.titletext {
+    font-size: 40px;
+    font-weight: bolder;
+    margin-top: 5px;
+}
+
+.titlediv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-align-bottom {
+    position: absolute;
+    bottom: 10px;
+    width: 160px;
+}
+
+.applebutton {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    height: 60px;
+}
+
+.privacy {
+    font-size: 10px;
+}
+
+.g-signin2 {
+    width: 100%;
+}
+
+.g-signin2>div>div {
+    width: 100% !important;
+}
+
+.abcRioButton {
+    width: 100% !important;
+}
+
+.g-signin2>div {
+    margin: 0 auto;
+}
+
+.matchtext {
+    color: black !important;
+    font-weight: bold;
+}
+
+.matchtext2 {
+    color: #fff !important;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 1.1em;
+}
+
+.dropdownbl {
+    cursor: pointer;
+    position: absolute;
+    color: black;
+    right: 10px;
+    font-size: 25px;
+    top: 2px;
+}
+
+.bltime {
+    text-decoration: italic;
+    font-size: 10px;
+}
+
+.auto-searchbl {
+    margin: 0px !important;
+}
+
+.auto-searchbl .dropdownbl {
+    margin: 0px !important;
+    top: -3px;
+}
+
+.auto-searchbl input {
+    height: 36px !important;
+}
+
+.auto-searchofficer {
+    margin: 0px !important;
+}
+
+.auto-searchofficer input {
+    height: 36px !important;
+}
+
+.auto-searchofficer .auto-clear {
+    top: 20px;
+}
+
+.dropdown-menu li {
+    position: relative;
+}
+
+.dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+}
+
+.dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+}
+
+.dropdown-menu>li:hover>.dropdown-submenu {
+    display: block;
+}
+
+.dropdown-submenu {
+    margin-left: -5px;
+}
+
+.dropdown-menu {
+    border-radius: 5px !important;
+}
+
+.mydropdown {
+    cursor: pointer;
+    position: absolute;
+    color: black;
+    right: 10px;
+    font-size: 25px;
+    top: 10px;
+}
+
+.myresourcedropdown {
+    cursor: pointer;
+    position: absolute;
+    color: black;
+    right: 10px;
+    font-size: 25px;
+    top: 10px;
+}
+
+.iconholder {
+    width: 24px;
+    display: inline-block;
+    text-align: center;
+}
+
+.Rare {
+    background-color: #2262c9;
+    color: white;
+}
+
+.Uncommon {
+    background-color: #119656;
+    color: white;
+}
+
+.Epic {
+    background-color: #9d07ad;
+    color: white;
+}
+
+.armadabadge {
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 0px;
+}
+
+.menupadding {
+    padding-left: 15px;
+}
+
+.mybutton {
+    display: block;
+    width: 100%;
+    margin-left: 9px !important;
+    margin-bottom: 5px;
+}
+
+.popover-arrow {
+    color: #4c9be8 !important;
+}
+
+.bs-popover-top .popover-arrow:after {
+    border-top-color: #4c9be8;
+}
+
+.bs-popover-bottom .popover-arrow:after {
+    border-bottom-color: #4c9be8;
+}
+
+.bs-popover-start .popover-arrow:after {
+    border-left-color: #4c9be8;
+}
+
+.bs-popover-end .popover-arrow:after {
+    border-right-color: #4c9be8;
+}
+
+.popover-body {
+    background-color: #4c9be8 !important;
+}
+
+.auction-extended {
+    max-width: 400px !important;
+}
+
+.colorcode {
+    float: right;
+    width: 35px;
+    height: 35px;
+    border-right: 10px;
+    border: solid #aaa 1px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 5px;
+}
+
+.myfooter {
+    width: 100%;
+}
+
+input[type=search] {
+    -webkit-appearance: button !important;
+}
+
+.upload-area {
+    width: 70%;
+    height: 200px;
+    border: 1px dashed #4c9be8;
+    border-radius: 3px;
+    margin: 0 auto;
+    margin-top: 20px;
+    text-align: center;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.officerability td {
+    color: #ddf7f5 !important;
+    font-weight: lighter !important;
+}
+
+.battletable {
+    table-layout: fixed;
+}
+
+.fixedcolumns {
+    table-layout: fixed;
+}
+
+.dashboardcode-bsmultiselect {
+    width: 100% !important;
+}
+
+.comparechooser {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.filtertext {
+    cursor: pointer;
+}
+
+li.badge {
+    color: #ffffff !important;
+}
+
+label.floating-lifted {
+    color: #fff !important;
+    opacity: 1 !important;
+}
+
+.form-floating label {
+    color: #fff !important;
+}
+
+.dashboardcode-bsmultiselect .form-control {
+    color: #ffffff !important;
+    background-color: #4c9be8 !important;
+}
+
+.dashboardcode-bsmultiselect .dropdown-menu {
+    background-color: #4c9be8 !important;
+}
+
+.battletable tr td {
+    width: 25%;
+}
+
+.badstuff td {
+    color: #ffbbbb !important;
+}
+
+.highlightround td {
+    font-weight: bold !important;
+}
+
+.upload-area:hover {
+    cursor: pointer;
+}
+
+.upload-area h1 {
+    text-align: center;
+    font-weight: normal;
+    font-family: sans-serif;
+    line-height: 50px;
+    color: #abb6c2;
+}
+
+#file {
+    display: none;
+}
+
+/* Thumbnail */
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    padding: 2px;
+    border: 2px solid lightgray;
+    border-radius: 3px;
+    float: left;
+}
+
+.size {
+    font-size: 12px;
+}
+
+.card-rounded-large {
+    border-radius: 0.5rem;
+}
+
+input[type="number"] {
+    appearance: textfield;
+}
+
+input[type="number"]:focus,
+input[type="number"]:hover {
+    appearance: auto;
+}
+
+#officers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    /* Change space-between to flex-start to avoid unnecessary gaps */
+    gap: 15px;
+    /* Adding a fixed gap between items */
+}

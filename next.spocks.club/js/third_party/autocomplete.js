@@ -1,0 +1,308 @@
+const Autocomplete = function() {
+  'use strict';
+
+  function t(e) {
+    return (t = 'function' === typeof Symbol && 'symbol' === typeof Symbol.iterator ? function(t) {
+      return typeof t;
+    } : function(t) {
+      return t && 'function' === typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? 'symbol' : typeof t;
+    })(e);
+  }
+
+  function e(t, e, s) {
+    return e in t ? Object.defineProperty(t, e, {
+      value: s,
+      enumerable: !0,
+      configurable: !0,
+      writable: !0
+    }) : t[e] = s, t;
+  }
+
+  function s(t) {
+    return function(t) {
+      if (Array.isArray(t)) {
+        return n(t);
+      }
+    }(t) || function(t) {
+      if ('undefined' !== typeof Symbol && null != t[Symbol.iterator] || null != t['@@iterator']) {
+        return Array.from(t);
+      }
+    }(t) || function(t, e) {
+      if (!t) {
+        return;
+      }
+      if ('string' === typeof t) {
+        return n(t, e);
+      }
+      let s = Object.prototype.toString.call(t).slice(8, -1);
+      'Object' === s && t.constructor && (s = t.constructor.name);
+      if ('Map' === s || 'Set' === s) {
+        return Array.from(t);
+      }
+      if ('Arguments' === s || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(s)) {
+        return n(t, e);
+      }
+    }(t) || function() {
+      throw new TypeError('Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.');
+    }();
+  }
+
+  function n(t, e) {
+    (null == e || e > t.length) && (e = t.length);
+    for (var s = 0, n = new Array(e); s < e; s++) {
+      n[s] = t[s];
+    }
+    return n;
+  }
+
+  return function n(o, i) {
+    let r, a = this,
+      c = i.delay,
+      l = void 0 === c ? 500 : c,
+      u = i.clearButton,
+      d = void 0 === u || u,
+      h = i.howManyCharacters,
+      m = void 0 === h ? 1 : h,
+      f = i.selectFirst,
+      v = void 0 !== f && f,
+      p = i.insertToInput,
+      L = void 0 !== p && p,
+      y = i.cache,
+      A = void 0 !== y && y,
+      b = i.disableCloseOnSelect,
+      x = void 0 !== b && b,
+      g = i.classGroup,
+      S = i.onResults,
+      C = void 0 === S ? function() {} : S,
+      E = i.onSearch,
+      I = void 0 === E ? function() {} : E,
+      T = i.onSubmit,
+      k = void 0 === T ? function() {} : T,
+      O = i.onOpened,
+      w = void 0 === O ? function() {} : O,
+      B = i.onReset,
+      D = void 0 === B ? function() {} : B,
+      F = i.onClose,
+      R = void 0 === F ? function() {} : F,
+      j = i.noResults,
+      N = void 0 === j ? function() {} : j,
+      G = i.onSelectedItem,
+      M = void 0 === G ? function() {} : G;
+    !function(t, e) {
+      if (!(t instanceof e)) {
+        throw new TypeError('Cannot call a class as a function');
+      }
+    }(this, n), e(this, 'init', (function() {
+      a.clearbutton(), a.output(), a.root.addEventListener('input', a.handleInput);
+    })), e(this, 'cacheAct', (function(t, e) {
+      if (a.cache) {
+        const s = document.getElementById(a.search);
+        'update' === t && s.setAttribute(a.cacheData, e.value), 'remove' === t && s.removeAttribute(a.cacheData), 'root' === t && (a.root.value = s.getAttribute(a.cacheData));
+      }
+    })), e(this, 'handleInput', (function(t) {
+      const e = t.target,
+        s = e.value.replace(a.regex, '\\$&');
+      clearTimeout(a.timeout), a.timeout = setTimeout((function() {
+        a.searchItem(s.trim());
+      }), a.delay), a.cacheAct('update', e);
+    })), e(this, 'output', (function() {
+      a.setAttr(a.resultList, {
+        id: a.outputUl,
+        addClass: 'auto-output-search',
+        tabIndex: 0,
+        role: 'listbox'
+      }), a.root.parentNode.insertBefore(a.resultList, a.root.nextSibling);
+    })), e(this, 'reset', (function() {
+      let t;
+      a.setAttr(a.root, {
+        'aria-owns': ''.concat(a.search, '-list'),
+        'aria-expanded': !1,
+        'aria-autocomplete': 'list',
+        'aria-activedescendant': '',
+        role: 'combobox',
+        removeClass: 'auto-expanded'
+      }), a.resultList.classList.remove(a.isActive), a.resultList.scrollTop = 0, 0 != (null === (t = a.matches) || void 0 === t ? void 0 : t.length) || a.toInput || (a.resultList.innerHTML = ''), a.index = a.selectFirst ? 0 : -1, a.onClose();
+    })), e(this, 'searchItem', (function(e) {
+      a.value = e, a.onLoading(!0), a.showBtn(), a.characters > e.length ? a.onLoading() : a.onSearch({
+        currentValue: e,
+        element: a.root
+      }).then((function(n) {
+        a.matches = Array.isArray(n) ? s(n) : JSON.parse(JSON.stringify(n)), a.onLoading(), a.error(), 0 == n.length && 0 == a.root.value.length && a.clearBtn.classList.add('hidden'), 0 == n.length && a.root.value.length ? (a.root.classList.remove('auto-expanded'), a.reset(), a.noResults({
+          element: a.root,
+          currentValue: e,
+          template: a.results
+        }), a.events()) : (n.length > 0 || function(e) {
+          return e && 'object' === t(e) && e.constructor === Object;
+        }(n)) && (a.index = a.selectFirst ? 0 : -1, a.results(), a.events());
+      })).catch((function() {
+        a.onLoading(), a.reset();
+      }));
+    })), e(this, 'onLoading', (function(t) {
+      return a.root.parentNode.classList[t ? 'add' : 'remove'](a.isLoading);
+    })), e(this, 'error', (function() {
+      return a.root.classList.remove(a.err);
+    })), e(this, 'events', (function() {
+      const t = [].slice.call(a.resultList.children);
+      a.root.addEventListener('keydown', a.handleKeys), a.root.addEventListener('click', a.handleShowItems);
+      for (let e = 0; e < t.length; e++) {
+        t[e].addEventListener('mousemove', a.handleMouse), t[e].addEventListener('click', a.handleMouse, !1);
+      }
+      document.addEventListener('click', a.handleDocClick);
+    })), e(this, 'results', (function(t) {
+      a.setAttr(a.root, {
+        'aria-expanded': !0,
+        addClass: 'auto-expanded'
+      }), a.resultList.innerHTML = 0 === a.matches.length ? a.onResults({
+        currentValue: a.value,
+        matches: 0,
+        template: t
+      }) : a.onResults({
+        currentValue: a.value,
+        matches: a.matches,
+        classGroup: a.classGroup
+      }), a.resultList.classList.add(a.isActive);
+      const e = a.classGroup ? ':not(.'.concat(a.classGroup, ')') : '';
+      a.itemsLi = document.querySelectorAll('#'.concat(a.outputUl, ' > li').concat(e)), a.selectFirstEl(), a.onOpened({
+        type: 'results',
+        element: a.root,
+        results: a.resultList
+      }), a.addAria();
+    })), e(this, 'handleDocClick', (function(t) {
+      let e = t.target,
+        s = null;
+      e.closest('ul') && a.disableCloseOnSelect && (s = !0), e.id === a.search || s || a.reset();
+    })), e(this, 'addAria', (function() {
+      for (let t = 0; t < a.itemsLi.length; t++) {
+        a.setAttr(a.itemsLi[t], {
+          role: 'option',
+          tabindex: -1,
+          'aria-selected': 'false',
+          'aria-setsize': a.itemsLi.length,
+          'aria-posinset': t
+        });
+      }
+    })), e(this, 'selectFirstEl', (function() {
+      if (a.remAria(document.querySelector('.'.concat(a.activeList))), a.selectFirst) {
+        const t = a.resultList.firstElementChild,
+          e = a.classGroup && a.matches.length > 0 && a.selectFirst ? t.nextElementSibling : t;
+        a.setAttr(e, {
+          id: ''.concat(a.selectedOption, '-0'),
+          addClass: a.activeList,
+          'aria-selected': !0
+        }), a.setAriaDes(''.concat(a.selectedOption, '-0')), a.follow(t, a.resultList);
+      }
+    })), e(this, 'showBtn', (function() {
+      a.clearBtn && (a.clearBtn.classList.remove('hidden'), a.clearBtn.addEventListener('click', a.destroy));
+    })), e(this, 'setAttr', (function(t, e) {
+      for (const s in e) {
+        'addClass' === s ? t.classList.add(e[s]) : 'removeClass' === s ? t.classList.remove(e[s]) : t.setAttribute(s, e[s]);
+      }
+    })), e(this, 'handleShowItems', (function() {
+      a.resultList.textContent.length > 0 && !a.resultList.classList.contains(a.isActive) && (a.setAttr(a.root, {
+        'aria-expanded': !0,
+        addClass: 'auto-expanded'
+      }), a.resultList.classList.add(a.isActive), a.selectFirstEl(), a.onOpened({
+        type: 'showItems',
+        element: a.root,
+        results: a.resultList
+      }));
+    })), e(this, 'handleMouse', (function(t) {
+      t.preventDefault();
+      const e = t.target,
+        s = t.type,
+        n = e.closest('li'),
+        o = null == n ? void 0 : n.hasAttribute('role');
+      n && o && ('click' === s && a.getTextFromLi(n), n.classList.contains(a.activeList) || 'mousemove' === s && (a.remAria(document.querySelector('.'.concat(a.activeList))), a.setAria(n), a.index = a.indexLiSelected(n), a.onSelectedItem({
+        index: a.index,
+        element: a.root,
+        object: a.matches[a.index]
+      })));
+    })), e(this, 'getTextFromLi', (function(t) {
+      t && 0 !== a.matches.length ? (a.addToInput(t), a.onSubmit({
+        index: a.index,
+        element: a.root,
+        object: a.matches[a.index],
+        results: a.resultList
+      }), a.disableCloseOnSelect || (a.remAria(t), a.reset()), a.cacheAct('remove')) : a.disableCloseOnSelect || a.reset();
+    })), e(this, 'firstElement', (function(t) {
+      return t.firstElementChild || t;
+    })), e(this, 'addToInput', (function(t) {
+      a.root.value = a.firstElement(t).textContent.trim();
+    })), e(this, 'indexLiSelected', (function(t) {
+      return Array.prototype.indexOf.call(a.itemsLi, t);
+    })), e(this, 'handleKeys', (function(t) {
+      const e = t.keyCode,
+        s = a.resultList.classList.contains(a.isActive),
+        n = a.matches.length + 1;
+      switch (a.selectedLi = document.querySelector('.'.concat(a.activeList)), e) {
+      case a.keyCodes.UP:
+      case a.keyCodes.DOWN:
+        if (t.preventDefault(), n <= 1 && a.selectFirst || !s) {
+          return;
+        }
+        e === a.keyCodes.UP ? (a.index < 0 && (a.index = n - 1), a.index -= 1) : (a.index += 1, a.index >= n && (a.index = 0)), a.remAria(a.selectedLi), n > 0 && a.index >= 0 && a.index < n - 1 ? (a.onSelectedItem({
+          index: a.index,
+          element: a.root,
+          object: a.matches[a.index]
+        }), a.setAria(a.itemsLi[a.index]), a.toInput && s && a.addToInput(a.itemsLi[a.index])) : (a.cacheAct('root'), a.setAriaDes());
+        break;
+      case a.keyCodes.ENTER:
+        a.getTextFromLi(a.selectedLi);
+        break;
+      case a.keyCodes.TAB:
+      case a.keyCodes.ESC:
+        a.reset();
+      }
+    })), e(this, 'setAria', (function(t) {
+      const e = ''.concat(a.selectedOption, '-').concat(a.indexLiSelected(t));
+      a.setAttr(t, {
+        id: e,
+        'aria-selected': !0,
+        addClass: a.activeList
+      }), a.setAriaDes(e), a.follow(t, a.resultList);
+    })), e(this, 'follow', (function(t, e) {
+      if (t.offsetTop < e.scrollTop) {
+        e.scrollTop = t.offsetTop;
+      } else {
+        const s = t.offsetTop + t.offsetHeight;
+        s > e.scrollTop + e.offsetHeight && (e.scrollTop = s - e.offsetHeight);
+      }
+    })), e(this, 'remAria', (function(t) {
+      t && a.setAttr(t, {
+        id: '',
+        removeClass: a.activeList,
+        'aria-selected': !1
+      });
+    })), e(this, 'setAriaDes', (function(t) {
+      return a.root.setAttribute('aria-activedescendant', t || '');
+    })), e(this, 'clearbutton', (function() {
+      a.clearButton && (a.clearBtn = document.createElement('button'), a.setAttr(a.clearBtn, {
+        id: 'auto-clear-'.concat(a.search),
+        class: 'auto-clear hidden',
+        type: 'button',
+        'aria-label': 'Clear text from input'
+      }), a.root.insertAdjacentElement('afterend', a.clearBtn));
+    })), e(this, 'generate', (function() {
+      if (typeof this.value !== 'undefined') {
+        a.searchItem(this.value);
+      } else {
+        a.searchItem('');
+      }
+    })), e(this, 'destroy', (function() {
+      a.clearButton && a.clearBtn.classList.add('hidden'), a.root.value = '', a.root.focus(), a.resultList.textContent = '', a.reset(), a.error(), a.onReset(a.root), a.root.removeEventListener('keydown', a.handleKeys), a.root.removeEventListener('click', a.handleShowItems), document.removeEventListener('click', a.handleDocClick);
+    })), this.search = o, this.root = document.getElementById(this.search), this.onSearch = (r = I, Boolean(r && 'function' === typeof r.then) ? I : function(t) {
+      const e = t.currentValue,
+        s = t.element;
+      return Promise.resolve(I({
+        currentValue: e,
+        element: s
+      }));
+    }), this.onResults = C, this.onSubmit = k, this.onSelectedItem = M, this.onOpened = w, this.onReset = D, this.noResults = N, this.onClose = R, this.delay = l, this.characters = m, this.clearButton = d, this.selectFirst = v, this.toInput = L, this.classGroup = g, this.disableCloseOnSelect = x, this.cache = A, this.outputUl = 'auto-'.concat(this.search), this.cacheData = 'data-cache-auto-'.concat(this.search), this.isLoading = 'auto-is-loading', this.isActive = 'auto-is-active', this.activeList = 'auto-selected', this.selectedOption = 'auto-selected-option', this.err = 'auto-error', this.regex = /[|\\{}()[\]^$+*?.]/g, this.timeout = null, this.resultList = document.createElement('ul'), this.keyCodes = {
+      ESC: 27,
+      ENTER: 13,
+      UP: 38,
+      DOWN: 40,
+      TAB: 9
+    }, this.init();
+  };
+}();
